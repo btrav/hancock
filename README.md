@@ -4,7 +4,7 @@ A signature generator that lives in your browser.
 
 Draw or type your signature, download a transparent PNG, copy to clipboard. No signup, no upload, nothing leaves your browser.
 
-**Live:** https://btrav.github.io/hancock/
+**Live:** https://benjamintravis.com/hancock/
 
 ## Why
 
