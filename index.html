@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="description" content="Draw or type your signature, download a transparent PNG. No signup, no upload, nothing leaves your browser." />
+    <title>Hancock — signature generator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Allura&family=Dancing+Script:wght@400..700&family=Fraunces:opsz,wght@9..144,500..700&family=Homemade+Apple&family=Inter:wght@400;500;600&family=Pinyon+Script&family=Sacramento&family=Yellowtail&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <body>
+    <main id="app">
+      <header class="header">
+        <div class="brand">
+          <h1>Hancock</h1>
+        </div>
+        <p class="trust" aria-live="polite">
+          <span class="dot" aria-hidden="true"></span>
+          Processed in your browser. Nothing uploaded.
+        </p>
+      </header>
+
+      <nav class="tabs" role="tablist">
+        <button class="tab is-active" role="tab" aria-selected="true" data-mode="draw">Draw</button>
+        <button class="tab" role="tab" aria-selected="false" data-mode="type">Type</button>
+      </nav>
+
+      <div class="type-controls" id="typeControls" hidden>
+        <input
+          id="nameInput"
+          type="text"
+          placeholder="Type your name"
+          autocomplete="off"
+          spellcheck="false"
+          maxlength="40"
+        />
+        <div class="font-picker" id="fontPicker">
+          <button
+            class="font-picker-toggle"
+            id="fontToggle"
+            type="button"
+            aria-haspopup="listbox"
+            aria-expanded="false"
+          >
+            <span class="font-picker-current" id="fontCurrent">Dancing Script</span>
+            <span class="font-picker-caret" aria-hidden="true">▾</span>
+          </button>
+          <ul class="font-picker-menu" id="fontMenu" role="listbox" hidden>
+            <li role="option" tabindex="-1" data-value="Dancing Script" style="font-family: 'Dancing Script', cursive">Dancing Script</li>
+            <li role="option" tabindex="-1" data-value="Sacramento" style="font-family: 'Sacramento', cursive">Sacramento</li>
+            <li role="option" tabindex="-1" data-value="Allura" style="font-family: 'Allura', cursive">Allura</li>
+            <li role="option" tabindex="-1" data-value="Pinyon Script" style="font-family: 'Pinyon Script', cursive">Pinyon Script</li>
+            <li role="option" tabindex="-1" data-value="Homemade Apple" style="font-family: 'Homemade Apple', cursive">Homemade Apple</li>
+            <li role="option" tabindex="-1" data-value="Yellowtail" style="font-family: 'Yellowtail', cursive">Yellowtail</li>
+          </ul>
+        </div>
+      </div>
+
+      <section class="canvas-wrap" aria-label="Signature surface">
+        <div class="baseline" aria-hidden="true"></div>
+        <canvas id="canvas" aria-label="Draw your signature"></canvas>
+        <div class="canvas-hint" id="canvasHint">Draw your signature</div>
+      </section>
+
+      <div class="controls">
+        <div class="control-group" role="radiogroup" aria-label="Ink color">
+          <button class="swatch is-active" data-color="#0a0a0a" style="--c: #0a0a0a" aria-label="Black"></button>
+          <button class="swatch" data-color="#1e3a8a" style="--c: #1e3a8a" aria-label="Navy"></button>
+          <button class="swatch" data-color="#1d4ed8" style="--c: #1d4ed8" aria-label="Blue"></button>
+          <button class="swatch" data-color="#334155" style="--c: #334155" aria-label="Slate"></button>
+          <span class="swatch-custom-wrap">
+            <label class="swatch swatch-custom" id="customSwatchWrap" aria-label="Custom color" title="Pick a custom ink color">
+              <input type="color" id="customColor" value="#9333ea" />
+            </label>
+            <button
+              id="customClear"
+              class="swatch-clear"
+              type="button"
+              aria-label="Reset to default color"
+              title="Clear custom color"
+              hidden
+            >×</button>
+          </span>
+        </div>
+
+        <label class="slider" id="weightControl">
+          <span class="slider-label">
+            Weight
+            <span class="info" data-tip="Stroke thickness — how thick the ink line is">ⓘ</span>
+          </span>
+          <input id="weight" type="range" min="2" max="14" value="5" aria-label="Stroke weight (thickness)" />
+        </label>
+
+        <label class="slider" id="pressureControl">
+          <span class="slider-label">
+            Pressure
+            <span class="info" data-tip="How much pressure variation affects line thickness. Higher = more contrast between thick and thin parts.">ⓘ</span>
+          </span>
+          <input id="pressure" type="range" min="0" max="100" value="55" aria-label="Pressure sensitivity" />
+        </label>
+
+        <label class="toggle" id="velocityControl">
+          <input type="checkbox" id="velocityToggle" />
+          <span class="toggle-label">
+            Speed-aware
+            <span class="info" data-tip="When on, the line thins as you draw faster — a stylus-like feel.">ⓘ</span>
+          </span>
+        </label>
+
+        <label class="slider" id="flowControl">
+          <span class="slider-label">
+            Smoothness
+            <span class="info" data-tip="Higher = smoother curves. Lower = closer to your raw motion.">ⓘ</span>
+          </span>
+          <input id="flow" type="range" min="0" max="100" value="65" aria-label="Stroke smoothness" />
+        </label>
+
+        <div class="actions">
+          <button id="undo" class="btn btn-sm" aria-label="Undo last stroke" title="Undo last stroke (⌘/Ctrl+Z)">
+            ↶ Undo
+          </button>
+          <button id="clear" class="btn btn-sm" aria-label="Clear canvas" title="Clear canvas">
+            Clear
+          </button>
+          <span class="actions-divider" aria-hidden="true"></span>
+          <button id="copy" class="btn" title="Copy PNG to clipboard">Copy</button>
+          <button id="download" class="btn btn-primary">Download PNG</button>
+        </div>
+      </div>
+
+      <p class="mouse-hint" id="mouseHint" hidden>
+        Tip: signatures look most natural on a touchscreen or stylus. On a mouse, try
+        <button class="linklike" data-mode="type">Type mode</button>.
+      </p>
+
+      <footer class="footer">
+        <p>Generates signature images. Not a legal e-signature tool.</p>
+        <a href="https://github.com/btrav/hancock" target="_blank" rel="noopener">GitHub</a>
+      </footer>
+
+      <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+    </main>
+    <script type="module" src="/src/main.ts"></script>
+  </body>
+</html>

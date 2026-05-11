@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&amp;display=block');
+    .h { font-family: 'Fraunces', Georgia, 'Times New Roman', serif; font-weight: 600; }
+  </style>
+  <text class="h" x="24" y="38" font-size="44" text-anchor="middle" fill="#0a0a0a">H</text>
+</svg>
