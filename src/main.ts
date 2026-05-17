@@ -142,7 +142,7 @@ function strokeOptions(s: Stroke, isLive = false) {
   const base = ((s.flow ?? 65) / 100) * 0.9;
   const mouseBoost = s.pointerType !== "pen" ? 0.08 : 0;
   const streamline = Math.min(0.85, base + mouseBoost);
-  const thinning = s.velocityPressure ? ((s.pressure ?? 55) / 100) * 0.55 : 0;
+  const thinning = s.velocityPressure ? 0.2 + ((s.pressure ?? 55) / 100) * 0.55 : 0;
   return {
     size: s.size,
     thinning,
@@ -406,7 +406,7 @@ function computePressure(e: PointerEvent, isFirst: boolean): number {
   const dist = Math.sqrt(dx * dx + dy * dy);
   const v = dist / dt; // px per ms
   const raw = 1 - Math.min(1, v * 0.5);
-  const clamped = Math.max(0.45, Math.min(1, raw));
+  const clamped = Math.max(0.35, Math.min(1, raw));
   smoothedPressure = smoothedPressure * 0.7 + clamped * 0.3;
   return smoothedPressure;
 }
